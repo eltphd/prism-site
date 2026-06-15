@@ -547,52 +547,31 @@ export default function PrismPage() {
             Feelings Unplugged — the book
           </h2>
           <p style={{ color: "#b0a8d0", fontSize: 15, lineHeight: 1.7, margin: "0 0 20px" }}>
-            PRISM is powered by the same framework behind <em>Feelings Unplugged</em> — a teen wellness journal developed by Dr. Tartt through{" "}
+            PRISM runs on the same framework as <em>Feelings Unplugged</em> — the published teen wellness journal from{" "}
             <a href="https://us-squared.org" target="_blank" rel="noopener noreferrer" style={{ color: "#d4a843", textDecoration: "none" }}>
               US²
             </a>
-            . Every PRISM participant gets a free digital copy to keep.
+            . Grab a copy for the teen in your life.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <a
-              href="https://feelingsunplugged.com/products/FU-Teen-Journal.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "block",
-                background: "rgba(212,168,67,0.2)",
-                border: "1.5px solid #d4a843",
-                borderRadius: 12,
-                padding: "14px 20px",
-                color: "#d4a843",
-                fontWeight: 700,
-                fontSize: 15,
-                textDecoration: "none",
-                textAlign: "center",
-              }}
-            >
-              📖 Get the free digital journal
-            </a>
-            <a
-              href="https://feelingsunplugged.com/the-book"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "block",
-                background: "rgba(255,255,255,0.05)",
-                border: "1.5px solid rgba(255,255,255,0.12)",
-                borderRadius: 12,
-                padding: "14px 20px",
-                color: "#b0a8d0",
-                fontWeight: 600,
-                fontSize: 15,
-                textDecoration: "none",
-                textAlign: "center",
-              }}
-            >
-              Learn more at feelingsunplugged.com →
-            </a>
-          </div>
+          <a
+            href="https://buy.stripe.com/6oU00i4Hq0cG8ck3bL4Rq0b"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              background: "rgba(212,168,67,0.2)",
+              border: "1.5px solid #d4a843",
+              borderRadius: 12,
+              padding: "14px 20px",
+              color: "#d4a843",
+              fontWeight: 700,
+              fontSize: 15,
+              textDecoration: "none",
+              textAlign: "center",
+            }}
+          >
+            Buy One · Gift One →
+          </a>
         </div>
       </section>
 
