@@ -13,33 +13,71 @@ const RAYS = [
 ];
 
 function PrismRays() {
+  // Prism triangle with rainbow rays exiting right, like the flyer
+  // Apex at left, base on right, rays fan out from the right face
+  const apexX = 10;
+  const apexY = 50;
+  const baseTopX = 58;
+  const baseTopY = 8;
+  const baseBotX = 58;
+  const baseBotY = 52;
+
+  // Ray exit points evenly spaced along right face, colors top→bottom
+  const rayColors = ["#e05252","#e8843a","#d4a843","#5aab6e","#4a90d9","#7c5cbf","#d95a8e"];
+  const rays = rayColors.map((color, i) => {
+    const t = i / (rayColors.length - 1);
+    const startX = baseTopX + t * (baseBotX - baseTopX);
+    const startY = baseTopY + t * (baseBotY - baseTopY);
+    // Fan angle: top ray goes up-right, bottom ray goes down-right
+    const angleDeg = -30 + i * 10;
+    const rad = (angleDeg * Math.PI) / 180;
+    const len = 42;
+    return {
+      color,
+      x1: startX,
+      y1: startY,
+      x2: startX + Math.cos(rad) * len,
+      y2: startY + Math.sin(rad) * len,
+    };
+  });
+
   return (
     <svg
-      width="80"
-      height="60"
-      viewBox="0 0 80 60"
+      width="110"
+      height="64"
+      viewBox="0 0 110 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {RAYS.map((color, i) => {
-        const angle = 200 + i * 12;
-        const rad = (angle * Math.PI) / 180;
-        const x2 = 5 + Math.cos(rad) * 70;
-        const y2 = 50 + Math.sin(rad) * 70;
-        return (
-          <line
-            key={i}
-            x1="5"
-            y1="50"
-            x2={x2}
-            y2={y2}
-            stroke={color}
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        );
-      })}
+      {/* Prism triangle */}
+      <polygon
+        points={`${apexX},${apexY} ${baseTopX},${baseTopY} ${baseBotX},${baseBotY}`}
+        fill="rgba(255,255,255,0.06)"
+        stroke="rgba(255,255,255,0.25)"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      {/* Incoming white light ray */}
+      <line
+        x1="0" y1="30"
+        x2={apexX} y2={apexY}
+        stroke="rgba(255,255,255,0.5)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeDasharray="4 3"
+      />
+      {/* Rainbow rays */}
+      {rays.map((r, i) => (
+        <line
+          key={i}
+          x1={r.x1} y1={r.y1}
+          x2={r.x2} y2={r.y2}
+          stroke={r.color}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      ))}
     </svg>
   );
 }
