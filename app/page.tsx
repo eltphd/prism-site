@@ -513,7 +513,9 @@ export default function PrismPage() {
             teen&apos;s access to this space. Every dollar stays local.
           </p>
           <a
-            href="mailto:drtarttphd@us-squared.org?subject=PRISM%20Sponsorship"
+            href="https://buy.stripe.com/4gM14mfm46B478g9A94Rq0e"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: "inline-block",
               background: "rgba(90,171,110,0.25)",
@@ -526,7 +528,7 @@ export default function PrismPage() {
               textDecoration: "none",
             }}
           >
-            Get in touch about sponsoring
+            Donate $25 — sponsor a teen's journal
           </a>
         </div>
       </section>
