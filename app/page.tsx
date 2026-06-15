@@ -523,6 +523,79 @@ export default function PrismPage() {
         </div>
       </section>
 
+      {/* THE BOOK */}
+      <section
+        style={{
+          padding: "32px 24px",
+          maxWidth: 500,
+          margin: "0 auto",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div
+          style={{
+            background: "linear-gradient(135deg, rgba(212,168,67,0.12), rgba(124,92,191,0.12))",
+            border: "1.5px solid rgba(212,168,67,0.3)",
+            borderRadius: 20,
+            padding: "28px 24px",
+          }}
+        >
+          <p style={{ fontSize: 12, letterSpacing: "0.15em", color: "#d4a843", textTransform: "uppercase", margin: "0 0 10px", fontWeight: 700 }}>
+            Part of the ecosystem
+          </p>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#f0eeff", margin: "0 0 10px" }}>
+            Feelings Unplugged — the book
+          </h2>
+          <p style={{ color: "#b0a8d0", fontSize: 15, lineHeight: 1.7, margin: "0 0 20px" }}>
+            PRISM is powered by the same framework behind <em>Feelings Unplugged</em> — a teen wellness journal developed by Dr. Tartt through{" "}
+            <a href="https://us-squared.org" target="_blank" rel="noopener noreferrer" style={{ color: "#d4a843", textDecoration: "none" }}>
+              US²
+            </a>
+            . Every PRISM participant gets a free digital copy to keep.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <a
+              href="https://feelingsunplugged.com/products/FU-Teen-Journal.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "block",
+                background: "rgba(212,168,67,0.2)",
+                border: "1.5px solid #d4a843",
+                borderRadius: 12,
+                padding: "14px 20px",
+                color: "#d4a843",
+                fontWeight: 700,
+                fontSize: 15,
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              📖 Get the free digital journal
+            </a>
+            <a
+              href="https://feelingsunplugged.com/the-book"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "block",
+                background: "rgba(255,255,255,0.05)",
+                border: "1.5px solid rgba(255,255,255,0.12)",
+                borderRadius: 12,
+                padding: "14px 20px",
+                color: "#b0a8d0",
+                fontWeight: 600,
+                fontSize: 15,
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              Learn more at feelingsunplugged.com →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* SPONSOR A TEEN */}
       <section
         style={{
