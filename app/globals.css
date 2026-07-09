@@ -10,7 +10,7 @@ html {
 
 body {
   margin: 0;
-  background: #0f0e1a;
-  color: #f0eeff;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: #0d0b12;
+  color: #f2eefa;
+  font-family: var(--font-courier-prime), ui-monospace, SFMono-Regular, monospace;
 }

@@ -2,101 +2,33 @@
 
 import { useState } from "react";
 
-const RAYS = [
-  "#e05252", // red
-  "#e8843a", // orange
-  "#d4a843", // gold
-  "#5aab6e", // green
-  "#4a90d9", // blue
-  "#7c5cbf", // purple
-  "#d95a8e", // pink
-];
+const INK = "#0d0b12";
+const PANEL = "#1a1622";
+const BORDER = "#2c2638";
+const TEXT = "#f2eefa";
+const TEXT_SECONDARY = "#cfc8de";
+const MUTED = "#9c92b0";
+const MUTED2 = "#574f66";
+const LILAC = "#b8a6d9";
+const GOLD = "#d9b96a";
+const BEAM = ["#a05656", "#a5804f", "#9aa055", "#5a9070", "#5a7ba0", "#8a64a8"];
 
-function PrismRays() {
-  // Prism triangle with rainbow rays exiting right, like the flyer
-  // Apex at left, base on right, rays fan out from the right face
-  const apexX = 10;
-  const apexY = 50;
-  const baseTopX = 58;
-  const baseTopY = 8;
-  const baseBotX = 58;
-  const baseBotY = 52;
+const archivo = "var(--font-archivo-black), sans-serif";
+const courier = "var(--font-courier-prime), ui-monospace, monospace";
 
-  // Ray exit points evenly spaced along right face, colors top→bottom
-  const rayColors = ["#e05252","#e8843a","#d4a843","#5aab6e","#4a90d9","#7c5cbf","#d95a8e"];
-  const rays = rayColors.map((color, i) => {
-    const t = i / (rayColors.length - 1);
-    const startX = baseTopX + t * (baseBotX - baseTopX);
-    const startY = baseTopY + t * (baseBotY - baseTopY);
-    // Fan angle: top ray goes up-right, bottom ray goes down-right
-    const angleDeg = -30 + i * 10;
-    const rad = (angleDeg * Math.PI) / 180;
-    const len = 42;
-    return {
-      color,
-      x1: startX,
-      y1: startY,
-      x2: startX + Math.cos(rad) * len,
-      y2: startY + Math.sin(rad) * len,
-    };
-  });
-
+function Beam() {
   return (
-    <svg
-      width="110"
-      height="64"
-      viewBox="0 0 110 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      {/* Prism triangle */}
-      <polygon
-        points={`${apexX},${apexY} ${baseTopX},${baseTopY} ${baseBotX},${baseBotY}`}
-        fill="rgba(255,255,255,0.06)"
-        stroke="rgba(255,255,255,0.25)"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      {/* Incoming white light ray */}
-      <line
-        x1="0" y1="30"
-        x2={apexX} y2={apexY}
-        stroke="rgba(255,255,255,0.5)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeDasharray="4 3"
-      />
-      {/* Rainbow rays */}
-      {rays.map((r, i) => (
-        <line
-          key={i}
-          x1={r.x1} y1={r.y1}
-          x2={r.x2} y2={r.y2}
-          stroke={r.color}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
+    <div style={{ height: 8, display: "flex", flexShrink: 0 }}>
+      {BEAM.map((c) => (
+        <div key={c} style={{ flex: 1, background: c }} />
       ))}
-    </svg>
-  );
-}
-
-function RainbowBar() {
-  return (
-    <div
-      style={{
-        height: 5,
-        background: `linear-gradient(to right, ${RAYS.join(", ")})`,
-      }}
-    />
+    </div>
   );
 }
 
 function InterestForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [cohort, setCohort] = useState("either");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle"
   );
@@ -108,13 +40,9 @@ function InterestForm() {
       const res = await fetch("/api/interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, cohort }),
+        body: JSON.stringify({ name, email }),
       });
-      if (res.ok) {
-        setStatus("done");
-      } else {
-        setStatus("error");
-      }
+      setStatus(res.ok ? "done" : "error");
     } catch {
       setStatus("error");
     }
@@ -122,540 +50,308 @@ function InterestForm() {
 
   if (status === "done") {
     return (
-      <div className="text-center py-8">
-        <div style={{ fontSize: 48 }}>✨</div>
-        <p
-          style={{
-            color: "#d4a843",
-            fontWeight: 700,
-            fontSize: 22,
-            marginTop: 8,
-          }}
-        >
-          You&apos;re on our radar!
+      <div style={{ textAlign: "center", padding: "32px 0" }}>
+        <p style={{ color: GOLD, fontWeight: 700, fontSize: 20, margin: 0 }}>
+          ✧ you&apos;re on our radar ✧
         </p>
-        <p style={{ color: "#b0a8d0", marginTop: 6 }}>
-          We&apos;ll be in touch before the cohort starts.
+        <p style={{ color: MUTED, marginTop: 8, fontSize: 15 }}>
+          or don&apos;t wait — just show up.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 420 }}
+    >
       <input
         required
         type="text"
-        placeholder="Name (first is fine)"
+        placeholder="name (first is fine)"
         value={name}
         onChange={(e) => setName(e.target.value)}
         style={{
-          background: "rgba(255,255,255,0.08)",
-          border: "1.5px solid rgba(255,255,255,0.15)",
-          borderRadius: 12,
+          background: "rgba(255,255,255,0.04)",
+          border: `1px solid ${BORDER}`,
           padding: "14px 16px",
-          color: "#f0eeff",
+          color: TEXT,
           fontSize: 16,
+          fontFamily: courier,
           outline: "none",
         }}
       />
       <input
         required
         type="email"
-        placeholder="Email"
+        placeholder="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         style={{
-          background: "rgba(255,255,255,0.08)",
-          border: "1.5px solid rgba(255,255,255,0.15)",
-          borderRadius: 12,
+          background: "rgba(255,255,255,0.04)",
+          border: `1px solid ${BORDER}`,
           padding: "14px 16px",
-          color: "#f0eeff",
+          color: TEXT,
           fontSize: 16,
+          fontFamily: courier,
           outline: "none",
         }}
       />
-      <div style={{ display: "flex", gap: 8 }}>
-        {[
-          { val: "cohort1", label: "June 15–27" },
-          { val: "cohort2", label: "July 6–18" },
-          { val: "either", label: "Either / Not sure" },
-        ].map((opt) => (
-          <button
-            key={opt.val}
-            type="button"
-            onClick={() => setCohort(opt.val)}
-            style={{
-              flex: 1,
-              padding: "10px 6px",
-              borderRadius: 10,
-              border: "1.5px solid",
-              borderColor: cohort === opt.val ? "#d4a843" : "rgba(255,255,255,0.15)",
-              background: cohort === opt.val ? "rgba(212,168,67,0.15)" : "rgba(255,255,255,0.05)",
-              color: cohort === opt.val ? "#d4a843" : "#b0a8d0",
-              fontSize: 13,
-              fontWeight: cohort === opt.val ? 700 : 400,
-              cursor: "pointer",
-            }}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
       {status === "error" && (
-        <p style={{ color: "#e05252", fontSize: 14, margin: 0 }}>
-          Something went wrong — email us at{" "}
-          <a href="mailto:drtarttphd@us-squared.org" style={{ color: "#e05252" }}>
-            drtarttphd@us-squared.org
-          </a>
+        <p style={{ color: "#c96a6a", fontSize: 14, margin: 0 }}>
+          something went wrong — text us instead → 614-647-4554
         </p>
       )}
       <button
         type="submit"
         disabled={status === "loading"}
         style={{
-          background: "linear-gradient(135deg, #7c5cbf, #d95a8e)",
+          background: LILAC,
           border: "none",
-          borderRadius: 12,
-          padding: "16px",
-          color: "#fff",
-          fontSize: 17,
+          padding: "14px 26px",
+          color: INK,
+          fontSize: 16,
           fontWeight: 700,
+          fontFamily: courier,
           cursor: status === "loading" ? "not-allowed" : "pointer",
           opacity: status === "loading" ? 0.7 : 1,
-          letterSpacing: "0.02em",
         }}
       >
-        {status === "loading" ? "Sending…" : "I'm interested →"}
+        {status === "loading" ? "sending…" : "keep me posted →"}
       </button>
-      <p style={{ color: "#6b6480", fontSize: 13, textAlign: "center", margin: 0 }}>
-        No spam. We&apos;ll only reach out about PRISM.
-      </p>
     </form>
   );
 }
 
 export default function PrismPage() {
   return (
-    <div style={{ minHeight: "100vh", background: "#0f0e1a" }}>
-      <RainbowBar />
+    <div
+      style={{
+        minHeight: "100vh",
+        background: INK,
+        fontFamily: courier,
+        color: TEXT,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Beam />
 
-      {/* HERO — everything above fold on mobile */}
-      <section
+      {/* nav */}
+      <div
         style={{
-          padding: "40px 24px 32px",
-          maxWidth: 500,
-          margin: "0 auto",
-          textAlign: "center",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "24px clamp(20px, 6vw, 64px)",
+          fontSize: 14,
+          letterSpacing: "0.12em",
+          color: MUTED,
         }}
       >
-        <p
-          style={{
-            letterSpacing: "0.18em",
-            fontSize: 13,
-            color: "#b0a8d0",
-            textTransform: "uppercase",
-            marginBottom: 16,
-          }}
-        >
-          Summer 2026
-        </p>
-
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: -8 }}>
-          <PrismRays />
+        <div style={{ fontFamily: archivo, fontSize: 20, color: TEXT, letterSpacing: "0.02em" }}>
+          PRISM
         </div>
+        <div>by FeelingsUnplugged</div>
+      </div>
 
-        <h1
+      {/* hero */}
+      <div
+        style={{
+          padding: "clamp(24px,6vw,40px) clamp(20px,6vw,64px) clamp(48px,8vw,80px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+          maxWidth: 900,
+        }}
+      >
+        <div style={{ fontSize: 15, color: LILAC, letterSpacing: "0.2em" }}>
+          ✧ FREE · AGES 13–19 · NO SIGN-UP NEEDED ✧
+        </div>
+        <div
           style={{
-            fontSize: "clamp(72px, 22vw, 110px)",
-            fontWeight: 900,
-            letterSpacing: "-0.04em",
-            margin: 0,
-            lineHeight: 0.9,
-            background: "linear-gradient(135deg, #fff 40%, #b0a8d0)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            fontFamily: archivo,
+            fontSize: "clamp(64px, 14vw, 160px)",
+            lineHeight: 0.88,
+            color: TEXT,
           }}
         >
           PRISM
-        </h1>
-
-        <p
-          style={{
-            fontStyle: "italic",
-            fontSize: 20,
-            color: "#b0a8d0",
-            margin: "14px 0 24px",
-            lineHeight: 1.4,
-          }}
-        >
-          Revealing what was always there.
-        </p>
-
-        {/* KEY INFO PILLS — visible immediately */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-          <div
-            style={{
-              background: "rgba(212,168,67,0.15)",
-              border: "1.5px solid #d4a843",
-              borderRadius: 14,
-              padding: "12px 20px",
-              color: "#d4a843",
-              fontWeight: 700,
-              fontSize: 15,
-            }}
-          >
-            FREE · Ages 13–19 · No sign-up needed
-          </div>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              borderRadius: 14,
-              padding: "12px 20px",
-              color: "#f0eeff",
-              fontSize: 15,
-            }}
-          >
-            📅 Mon–Fri · 10am – 3pm
-          </div>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              borderRadius: 14,
-              padding: "12px 20px",
-              color: "#f0eeff",
-              fontSize: 15,
-              lineHeight: 1.5,
-            }}
-          >
-            <span style={{ color: "#7c5cbf", fontWeight: 700 }}>Cohort 1:</span> June 15–27
-            <br />
-            <span style={{ color: "#4a90d9", fontWeight: 700 }}>Cohort 2:</span> July 6–18
-          </div>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              borderRadius: 14,
-              padding: "12px 20px",
-              color: "#f0eeff",
-              fontSize: 15,
-              lineHeight: 1.5,
-            }}
-          >
-            📍 David&apos;s United Church of Christ
-            <br />
-            <span style={{ color: "#b0a8d0" }}>Canal Winchester, Ohio</span>
-          </div>
         </div>
-
+        <div style={{ fontSize: "clamp(18px,3vw,26px)", fontStyle: "italic", color: MUTED }}>
+          do <span style={{ textDecoration: "line-through" }}>nothing</span> art this summer.
+        </div>
         <div
           style={{
-            background: "rgba(255,255,255,0.06)",
-            borderRadius: 14,
-            padding: "12px 20px",
-            fontWeight: 700,
-            fontSize: 15,
-            color: "#f0eeff",
+            fontSize: "clamp(16px,2.4vw,20px)",
+            color: TEXT_SECONDARY,
+            lineHeight: 1.6,
+            marginTop: 6,
           }}
         >
-          Just show up — open to all
+          JUL 13–17 · MON–FRI · 11AM–2PM
+          <br />
+          David&apos;s UCC · Canal Winchester
         </div>
-      </section>
-
-      {/* WHAT IS PRISM */}
-      <section
-        style={{
-          padding: "32px 24px",
-          maxWidth: 500,
-          margin: "0 auto",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: 26,
-            fontWeight: 800,
-            color: "#f0eeff",
-            marginBottom: 16,
-            textAlign: "center",
-          }}
-        >
-          What is PRISM?
-        </h2>
-        <p style={{ color: "#b0a8d0", fontSize: 17, lineHeight: 1.7, margin: 0 }}>
-          PRISM is a free summer wellness space where teens can actually breathe —
-          a place to talk, feel things, make sense of the world, and be seen for
-          exactly who they are. No pressure, no judgment. Just space to exist
-          and figure yourself out alongside people who get it.
-        </p>
-        <div
-          style={{
-            marginTop: 20,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-            justifyContent: "center",
-          }}
-        >
-          {[
-            "🏳️‍🌈 LGBTQIA+ affirming",
-            "🤝 Everyone welcome",
-            "🗣️ Talk it out",
-            "🧠 Mental wellness",
-            "✨ Be yourself",
-          ].map((tag) => (
-            <span
-              key={tag}
-              style={{
-                background: "rgba(124,92,191,0.2)",
-                border: "1px solid rgba(124,92,191,0.4)",
-                borderRadius: 20,
-                padding: "6px 14px",
-                fontSize: 14,
-                color: "#d0c8f0",
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* INTEREST FORM */}
-      <section
-        id="interested"
-        style={{
-          padding: "32px 24px",
-          maxWidth: 500,
-          margin: "0 auto",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: 26,
-            fontWeight: 800,
-            color: "#f0eeff",
-            marginBottom: 8,
-            textAlign: "center",
-          }}
-        >
-          Stay in the loop
-        </h2>
-        <p
-          style={{
-            color: "#b0a8d0",
-            fontSize: 16,
-            textAlign: "center",
-            marginBottom: 20,
-          }}
-        >
-          Drop your name and email — we&apos;ll send reminders and updates
-          before each cohort. Zero commitment.
-        </p>
-        <InterestForm />
-      </section>
-
-      {/* WHAT TO EXPECT */}
-      <section
-        style={{
-          padding: "32px 24px",
-          maxWidth: 500,
-          margin: "0 auto",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: 26,
-            fontWeight: 800,
-            color: "#f0eeff",
-            marginBottom: 20,
-            textAlign: "center",
-          }}
-        >
-          What to expect
-        </h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {[
-            {
-              icon: "🧘",
-              title: "Wellness activities",
-              desc: "Mindfulness, movement, creative expression — whatever helps you feel more like you.",
-            },
-            {
-              icon: "💬",
-              title: "Real conversations",
-              desc: "Group and individual space to talk about the stuff that actually matters.",
-            },
-            {
-              icon: "🎨",
-              title: "Creative space",
-              desc: "Art, journaling, music — express yourself without needing to explain it.",
-            },
-            {
-              icon: "🌱",
-              title: "Guided by Dr. Tartt",
-              desc: "Led by a licensed psychologist who actually listens and won't diagnose you over lunch.",
-            },
-          ].map((item) => (
-            <div
-              key={item.title}
-              style={{
-                display: "flex",
-                gap: 16,
-                background: "rgba(255,255,255,0.04)",
-                borderRadius: 14,
-                padding: "16px",
-              }}
-            >
-              <span style={{ fontSize: 28, lineHeight: 1 }}>{item.icon}</span>
-              <div>
-                <p style={{ fontWeight: 700, color: "#f0eeff", margin: "0 0 4px", fontSize: 16 }}>
-                  {item.title}
-                </p>
-                <p style={{ color: "#b0a8d0", margin: 0, fontSize: 14, lineHeight: 1.5 }}>
-                  {item.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* THE BOOK */}
-      <section
-        style={{
-          padding: "32px 24px",
-          maxWidth: 500,
-          margin: "0 auto",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(135deg, rgba(212,168,67,0.12), rgba(124,92,191,0.12))",
-            border: "1.5px solid rgba(212,168,67,0.3)",
-            borderRadius: 20,
-            padding: "28px 24px",
-          }}
-        >
-          <p style={{ fontSize: 12, letterSpacing: "0.15em", color: "#d4a843", textTransform: "uppercase", margin: "0 0 10px", fontWeight: 700 }}>
-            Part of the ecosystem
-          </p>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#f0eeff", margin: "0 0 10px" }}>
-            Feelings Unplugged — the book
-          </h2>
-          <p style={{ color: "#b0a8d0", fontSize: 15, lineHeight: 1.7, margin: "0 0 20px" }}>
-            PRISM runs on the same framework as <em>Feelings Unplugged</em> — the published teen wellness journal from{" "}
-            <a href="https://us-squared.org" target="_blank" rel="noopener noreferrer" style={{ color: "#d4a843", textDecoration: "none" }}>
-              US²
-            </a>
-            . Grab a copy for the teen in your life.
-          </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 12, alignItems: "center" }}>
           <a
-            href="https://buy.stripe.com/6oU00i4Hq0cG8ck3bL4Rq0b"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="sms:6146474554"
             style={{
-              display: "block",
-              background: "rgba(212,168,67,0.2)",
-              border: "1.5px solid #d4a843",
-              borderRadius: 12,
-              padding: "14px 20px",
-              color: "#d4a843",
-              fontWeight: 700,
-              fontSize: 15,
               textDecoration: "none",
-              textAlign: "center",
-            }}
-          >
-            Buy One · Gift One →
-          </a>
-        </div>
-      </section>
-
-      {/* SPONSOR A TEEN */}
-      <section
-        style={{
-          padding: "32px 24px",
-          maxWidth: 500,
-          margin: "0 auto",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(135deg, rgba(90,171,110,0.15), rgba(74,144,217,0.15))",
-            border: "1.5px solid rgba(90,171,110,0.3)",
-            borderRadius: 20,
-            padding: "28px 24px",
-            textAlign: "center",
-          }}
-        >
-          <div style={{ fontSize: 36, marginBottom: 8 }}>💚</div>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#f0eeff", margin: "0 0 10px" }}>
-            Sponsor a teen
-          </h2>
-          <p style={{ color: "#b0a8d0", fontSize: 15, lineHeight: 1.6, margin: "0 0 20px" }}>
-            PRISM is free because someone believed it should be. If you&apos;re in a
-            position to help keep it that way, your support directly funds a
-            teen&apos;s access to this space. Every dollar stays local.
-          </p>
-          <a
-            href="https://buy.stripe.com/4gM14mfm46B478g9A94Rq0e"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-block",
-              background: "rgba(90,171,110,0.25)",
-              border: "1.5px solid #5aab6e",
-              borderRadius: 12,
-              padding: "14px 28px",
-              color: "#5aab6e",
+              background: LILAC,
+              color: INK,
               fontWeight: 700,
               fontSize: 16,
-              textDecoration: "none",
+              padding: "14px 26px",
+              display: "inline-block",
             }}
           >
-            Donate $25 — sponsor a teen's journal
+            text to join → 614-647-4554
           </a>
+          <div style={{ fontSize: 15, color: MUTED2, fontStyle: "italic" }}>
+            or don&apos;t. just show up.
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* FOOTER */}
-      <footer
+      {/* activities */}
+      <div style={{ padding: "40px clamp(20px,6vw,64px)", borderTop: `1px solid ${BORDER}` }}>
+        <div style={{ fontSize: 14, color: "#8f86a0", letterSpacing: "0.18em", marginBottom: 20 }}>
+          WHAT&apos;S THERE
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "14px 34px", maxWidth: 820 }}>
+          {["photography", "leathermaking", "gaming", "watercolor", "creative writing", "culture talks"].map(
+            (item) => (
+              <span key={item} style={{ fontSize: "clamp(18px,2.6vw,24px)" }}>
+                ☐ {item}
+              </span>
+            )
+          )}
+          <span style={{ fontSize: "clamp(18px,2.6vw,24px)", fontWeight: 700 }}>☑ art fights ⚔</span>
+        </div>
+      </div>
+
+      {/* prize / journal */}
+      <div
         style={{
-          padding: "32px 24px 40px",
-          maxWidth: 500,
-          margin: "0 auto",
-          textAlign: "center",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
+          padding: "40px clamp(20px,6vw,64px)",
+          borderTop: `1px solid ${BORDER}`,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 28,
         }}
       >
-        <p style={{ color: "#b0a8d0", fontSize: 14, marginBottom: 6 }}>
-          LGBTQIA+ affirming · everyone welcome
-        </p>
-        <p style={{ color: "#f0eeff", fontWeight: 700, fontSize: 17, marginBottom: 16 }}>
-          prism.feelingsunplugged.com
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <a
-            href="mailto:drtarttphd@us-squared.org"
-            style={{ color: "#7c5cbf", fontSize: 14, textDecoration: "none" }}
-          >
-            drtarttphd@us-squared.org
-          </a>
-          <a
-            href="tel:6146474554"
-            style={{ color: "#7c5cbf", fontSize: 14, textDecoration: "none" }}
-          >
-            call or text 614-647-4554
-          </a>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 260,
+            background: PANEL,
+            border: `1px solid ${BORDER}`,
+            padding: 26,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <div style={{ fontSize: 15, color: "#8f86a0", letterSpacing: "0.16em" }}>
+            EVERYONE WHO SHOWS UP GETS
+          </div>
+          <div style={{ fontSize: 24, color: TEXT }}>a free FeelingsUnplugged journal</div>
         </div>
-      </footer>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 260,
+            background: PANEL,
+            border: `1px solid ${BORDER}`,
+            padding: 26,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <div style={{ fontSize: 15, color: "#8f86a0", letterSpacing: "0.16em" }}>
+            ATTENDING = ENTERED TO WIN
+          </div>
+          <div style={{ fontSize: 24, color: TEXT }}>
+            a shot at{" "}
+            <span style={{ background: GOLD, color: INK, fontWeight: 700, padding: "2px 10px" }}>
+              $50
+            </span>
+          </div>
+        </div>
+      </div>
 
-      <RainbowBar />
+      {/* stay in the loop */}
+      <div style={{ padding: "40px clamp(20px,6vw,64px)", borderTop: `1px solid ${BORDER}` }}>
+        <div style={{ fontSize: 14, color: "#8f86a0", letterSpacing: "0.18em", marginBottom: 16 }}>
+          KEEP ME POSTED
+        </div>
+        <p style={{ color: MUTED, fontSize: 15, margin: "0 0 20px", maxWidth: 420, lineHeight: 1.6 }}>
+          drop your name and email — we&apos;ll send a reminder before it starts. zero commitment.
+        </p>
+        <InterestForm />
+      </div>
+
+      {/* artfight teaser */}
+      <div
+        style={{
+          padding: "44px clamp(20px,6vw,64px)",
+          borderTop: `1px solid ${BORDER}`,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 28,
+          alignItems: "center",
+          background: "#14111a",
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 260, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ fontSize: 15, color: LILAC, letterSpacing: "0.16em" }}>
+            ✧ COMING THIS FALL ✧
+          </div>
+          <div style={{ fontFamily: archivo, fontSize: "clamp(32px,5vw,52px)", lineHeight: 0.95, color: TEXT }}>
+            ARTFIGHT
+          </div>
+          <div style={{ fontSize: 16, fontStyle: "italic", color: MUTED }}>
+            the art is hiding around town. go find it. go fight it.
+          </div>
+          <div style={{ fontSize: 15, color: TEXT_SECONDARY, marginTop: 4 }}>
+            no app. no sign-up. just eyes. clues + start date coming soon.
+          </div>
+        </div>
+        <a
+          href="sms:6146474554"
+          style={{
+            textDecoration: "none",
+            border: `1px solid ${LILAC}`,
+            color: LILAC,
+            fontSize: 15,
+            padding: "12px 22px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          get clues first →
+        </a>
+      </div>
+
+      {/* footer */}
+      <div
+        style={{
+          marginTop: "auto",
+          padding: "28px clamp(20px,6vw,64px)",
+          borderTop: `1px solid ${BORDER}`,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          gap: 12,
+          fontSize: 13,
+          color: MUTED2,
+        }}
+      >
+        <div>PRISM · a FeelingsUnplugged program</div>
+        <div>David&apos;s UCC · Canal Winchester, OH · 614-647-4554</div>
+      </div>
     </div>
   );
 }
