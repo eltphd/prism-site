@@ -14,6 +14,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Not configured" }, { status: 500 });
   }
 
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (supabaseUrl && supabaseKey) {
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { error } = await supabase.from("signups").insert({ name, email });
+    if (error) console.error("Supabase insert error:", error);
+  } else {
+    console.error("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set");
+  }
+
   const { Resend } = await import("resend");
   const resend = new Resend(apiKey);
 
